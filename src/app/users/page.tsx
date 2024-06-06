@@ -14,7 +14,7 @@ export default function UserListPage() {
     const [page, setPage] = useState<number>(1);
     const [users, setUsers] = useState<User[]>([]);
 
-    const { data } = useQuery<AxiosResponse<Required<UserList>>>({
+    const { data, error } = useQuery<AxiosResponse<Required<UserList>>>({
         queryKey: ['users', page],
         queryFn: () => getAllUsers(page),
         staleTime: 5 * 1000,
@@ -41,7 +41,15 @@ export default function UserListPage() {
                     dataLength={users?.length || 0}
                     next={fetchMoreData}
                     hasMore={hasMore}
-                    loader={<h4 className="text-center">...Loading</h4>}
+                    loader={
+                        error ? (
+                            <h4 className="text-center text-red-600">
+                                Please start the backend website!
+                            </h4>
+                        ) : (
+                            <h4 className="text-center">...Loading</h4>
+                        )
+                    }
                     endMessage={
                         <h4 className="text-center text-lg text-red-600 px-3 pb-3">
                             No more data is available!
